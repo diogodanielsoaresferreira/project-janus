@@ -1,0 +1,99 @@
+{
+    "rabbitmq_version": "3.9.1",
+    "users": [
+        {
+            "limits": {},
+            "tags": [
+                "administrator"
+            ],
+            "name": "guest",
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "password_hash": "idvoHpIAgmbAtsageEmC7cK84KJ3p7I3Tcnul3ExwijktW0Q"
+        }
+    ],
+    "policies": [],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "global_parameters": [
+        {
+            "value": "rabbitmq-cluster-id-QEgQTHa8FzMwmXqIbjk7bQ",
+            "name": "internal_cluster_id"
+        }
+    ],
+    "permissions": [
+        {
+            "configure": ".*",
+            "write": ".*",
+            "user": "guest",
+            "read": ".*",
+            "vhost": "/"
+        }
+    ],
+    "topic_permissions": [],
+    "product_version": "3.9.1",
+    "product_name": "RabbitMQ",
+    "bindings": [
+        {
+            "routing_key": "#",
+            "vhost": "/",
+            "destination": "sensor_message_repository_receiver",
+            "destination_type": "queue",
+            "arguments": {},
+            "source": "sensor_message"
+        },
+        {
+            "routing_key": "",
+            "vhost": "/",
+            "destination": "sensor_message_dead_letter_queue",
+            "destination_type": "queue",
+            "arguments": {},
+            "source": "sensor_message_dead_letter"
+        }
+    ],
+    "rabbit_version": "3.9.1",
+    "parameters": [],
+    "exchanges": [
+        {
+            "auto_delete": false,
+            "vhost": "/",
+            "name": "sensor_message",
+            "internal": false,
+            "type": "topic",
+            "arguments": {},
+            "durable": true
+        },
+        {
+            "auto_delete": false,
+            "vhost": "/",
+            "name": "sensor_message_dead_letter",
+            "internal": false,
+            "type": "fanout",
+            "arguments": {},
+            "durable": true
+        }
+    ],
+    "queues": [
+        {
+            "vhost": "/",
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            },
+            "name": "sensor_message_dead_letter_queue",
+            "durable": true
+        },
+        {
+            "vhost": "/",
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic",
+                "x-dead-letter-exchange": "sensor_message_dead_letter"
+            },
+            "name": "sensor_message_repository_receiver",
+            "durable": true
+        }
+    ]
+}
