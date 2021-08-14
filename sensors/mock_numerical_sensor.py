@@ -8,11 +8,6 @@ import json
 RABBITMQ_URL = "localhost"
 EXCHANGE = "sensor_message"
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_URL))
-channel = connection.channel()
-
-channel.exchange_declare(exchange=EXCHANGE, exchange_type='topic')
-
 message = {
     "event": "sensor_message",
     "sensor_id": "mock_sensor_1",
@@ -23,6 +18,8 @@ message = {
 
 routing_key = f'{message["sensor_id"]}.{message["value_type"]}'
 
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_URL))
+channel = connection.channel()
 channel.basic_publish(exchange=EXCHANGE, routing_key=routing_key, body=json.dumps(message))
 print("Sent %r:%r" % (routing_key, message))
 

@@ -3,7 +3,18 @@ version: "3.7"
 services:
   rabbitmq:
     image: rabbitmq:3.9.1-management-alpine
-    container_name: rabbitmq
+    volumes:
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     ports:
       - 5672:5672
       - 15672:15672
+
+  sensor_repository:
+    build:
+      context: ./sensor_repository
+    environment:
+      MIX_ENV: prod
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+    - rabbitmq
