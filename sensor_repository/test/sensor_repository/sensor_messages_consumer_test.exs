@@ -1,4 +1,4 @@
-defmodule MyBroadwayTest do
+defmodule SensorRepository.SensorMessagesConsumerTest do
   use ExUnit.Case, async: true
 
   @numerical_sensor_message "{\"event\": \"sensor_message\", \"sensor_id\": \"mock_sensor_1\", \"timestamp\": \"2021-08-14T16:22:59.759941\", \"value_type\": \"numerical\", \"value\": 2}"

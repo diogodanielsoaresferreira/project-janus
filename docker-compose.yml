@@ -10,11 +10,22 @@ services:
       - 5672:5672
       - 15672:15672
 
+  db:
+    image: timescale/timescaledb:2.4.1-pg12
+    ports:
+      - 5432:5432/tcp
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: sensor_repository_repo
+
   sensor_repository:
     build:
       context: ./sensor_repository
     environment:
       MIX_ENV: prod
       RABBITMQ_HOST: rabbitmq
+      DB_HOST: db
     depends_on:
     - rabbitmq
+    - db
