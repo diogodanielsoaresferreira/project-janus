@@ -31,7 +31,8 @@ defmodule SensorRepository.MixProject do
     [
       {:broadway_rabbitmq, "~> 0.6.0"},
       {:ecto_sql, "~> 3.7.0"},
-      {:postgrex, ">= 0.15.0"}
+      {:postgrex, ">= 0.15.0"},
+      {:poison, "~> 5.0"}
     ]
   end
 end

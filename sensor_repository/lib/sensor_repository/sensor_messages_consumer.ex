@@ -1,5 +1,6 @@
 defmodule SensorRepository.SensorMessagesConsumer do
   use Broadway
+  import SensorMessage.NumericMessage
 
   def start_link(_opts) do
 
@@ -29,7 +30,20 @@ defmodule SensorRepository.SensorMessagesConsumer do
 
   @impl true
   def handle_message(_, message, _) do
+    changesett = mapStringToNumericSensorMessage(message.data) |> changeset
+    SensorMessage.Repo.insert(changesett)
+
     message
-    |> IO.inspect
+  end
+
+  def mapStringToNumericSensorMessage(str) do
+    str_parsed = Poison.decode!(str)
+    {:ok, datetime, _} = DateTime.from_iso8601(str_parsed["timestamp"])
+    
+    %SensorMessage.NumericMessage{
+      created_at: datetime,
+      sensor_id: str_parsed["sensor_id"],
+      value: str_parsed["value"] / 1 # division always returns a float
+    }
   end
 end
