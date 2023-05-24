@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytz
 import pika
 import sys
 from datetime import datetime
@@ -11,7 +12,7 @@ EXCHANGE = "sensor_message"
 message = {
     "event": "sensor_message",
     "sensor_id": "mock_sensor_1",
-    "timestamp": datetime.now().isoformat(),
+    "timestamp": datetime.now(pytz.utc).isoformat(),
     "value_type": "numerical",
     "value": 2
 }
