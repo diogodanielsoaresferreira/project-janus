@@ -1,6 +1,7 @@
 defmodule SensorRepository.SensorMessagesConsumer do
   use Broadway
   import SensorMessage.NumericMessage
+  import SensorMessage.StringMessage
 
   def start_link(_opts) do
 
@@ -30,20 +31,38 @@ defmodule SensorRepository.SensorMessagesConsumer do
 
   @impl true
   def handle_message(_, message, _) do
-    changesett = mapStringToNumericSensorMessage(message.data) |> changeset
+    message_parsed = Poison.decode!(message.data)
+    changesett = case message_parsed["value_type"] do
+      "numerical" -> mapToNumericSensorMessage(message_parsed) |> SensorMessage.NumericMessage.changeset
+      "string" -> mapToStringSensorMessage(message_parsed) |> SensorMessage.StringMessage.changeset
+      _ -> raise UnknownSensorMessageType, "Unknown Sensor Message Type: #{message_parsed["value_type"]}"
+    end
     SensorMessage.Repo.insert(changesett)
 
     message
   end
 
-  def mapStringToNumericSensorMessage(str) do
-    str_parsed = Poison.decode!(str)
-    {:ok, datetime, _} = DateTime.from_iso8601(str_parsed["timestamp"])
-    
+  def mapToNumericSensorMessage(numeric_message) do
+    {:ok, datetime, _} = DateTime.from_iso8601(numeric_message["timestamp"])
+
     %SensorMessage.NumericMessage{
       created_at: datetime,
-      sensor_id: str_parsed["sensor_id"],
-      value: str_parsed["value"] / 1 # division always returns a float
+      sensor_id: numeric_message["sensor_id"],
+      value: numeric_message["value"] / 1 # division always returns a float
     }
   end
+
+  def mapToStringSensorMessage(string_message) do
+    {:ok, datetime, _} = DateTime.from_iso8601(string_message["timestamp"])
+
+    %SensorMessage.StringMessage{
+      created_at: datetime,
+      sensor_id: string_message["sensor_id"],
+      value: string_message["value"]
+    }
+  end
+end
+
+defmodule UnknownSensorMessageType do
+  defexception message: "Unknown Sensor Message Type"
 end
