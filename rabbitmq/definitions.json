@@ -1,5 +1,5 @@
 {
-    "rabbitmq_version": "3.9.1",
+    "rabbitmq_version": "3.11.7",
     "users": [
         {
             "limits": {},
@@ -9,6 +9,15 @@
             "name": "guest",
             "hashing_algorithm": "rabbit_password_hashing_sha256",
             "password_hash": "idvoHpIAgmbAtsageEmC7cK84KJ3p7I3Tcnul3ExwijktW0Q"
+        },
+        {
+            "name":"sensor_repository",
+            "password_hash":"IBeXrc7JZj0kDokRVkwK09UKQImwZ7+nPQwlrJhhZD2laUpl",
+            "hashing_algorithm":"rabbit_password_hashing_sha256",
+            "tags":[
+                "administrator"
+            ],
+            "limits":{}
         }
     ],
     "policies": [],
@@ -30,10 +39,17 @@
             "user": "guest",
             "read": ".*",
             "vhost": "/"
+        },
+        {
+            "user":"sensor_repository",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
         }
     ],
     "topic_permissions": [],
-    "product_version": "3.9.1",
+    "product_version": "3.11.7",
     "product_name": "RabbitMQ",
     "bindings": [
         {
@@ -53,7 +69,7 @@
             "source": "sensor_message_dead_letter"
         }
     ],
-    "rabbit_version": "3.9.1",
+    "rabbit_version": "3.11.7",
     "parameters": [],
     "exchanges": [
         {
