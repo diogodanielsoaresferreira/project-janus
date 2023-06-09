@@ -18,3 +18,14 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: sensor_repository_repo
+
+  sensor_repository:
+    build:
+      context: ./sensor_repository
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: sensor_repository
+      SPRING_RABBITMQ_PASSWORD: sensor_repository
+    depends_on:
+      - rabbitmq
+      - db
