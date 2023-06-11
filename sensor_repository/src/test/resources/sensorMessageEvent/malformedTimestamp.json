@@ -1,0 +1,7 @@
+{
+  "event": "event",
+  "sensor_id": "sensorId",
+  "timestamp": "malformed",
+  "value_type": "valueType",
+  "value": "value"
+}

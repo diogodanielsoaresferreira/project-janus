@@ -1,0 +1,6 @@
+{
+  "event": "event",
+  "sensor_id": "sensorId",
+  "timestamp": "2023-06-11T16:27:03.111827+00:00",
+  "value_type": "valueType"
+}
