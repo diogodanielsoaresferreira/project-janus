@@ -1,4 +1,4 @@
-package com.janus.sensor_repository.domain.entity
+package com.janus.sensor_repository.adapters.sensorMessageProcessor
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
