@@ -1,4 +1,4 @@
-package com.janus.sensor_repository.domain.entity
+package com.janus.sensor_repository.adapters.sensorMessageProcessor
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -13,10 +13,9 @@ import java.io.IOException
 
 
 @JsonTest
-internal class SensorMessageEventDeserializationTest {
-
-    @Autowired
-    private lateinit var jsonParser: JacksonTester<SensorMessageEvent>
+internal class SensorMessageEventDeserializationTest(
+    @Autowired private val jsonParser: JacksonTester<SensorMessageEvent>
+) {
 
     @ParameterizedTest
     @MethodSource("successfulSensorMessageEventGenerator")

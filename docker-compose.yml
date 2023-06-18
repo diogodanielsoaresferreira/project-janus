@@ -15,8 +15,8 @@ services:
     ports:
       - 5432:5432/tcp
     environment:
-      POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: sensor_repository_repo
 
   sensor_repository:
@@ -26,6 +26,9 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: sensor_repository
       SPRING_RABBITMQ_PASSWORD: sensor_repository
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sensor_repository_repo
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
     depends_on:
       - rabbitmq
       - db

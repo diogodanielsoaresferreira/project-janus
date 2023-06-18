@@ -1,12 +1,11 @@
-package com.janus.sensor_repository.adapters.sensor_messages
+package com.janus.sensor_repository.adapters.sensorMessageProcessor
 
-import com.janus.sensor_repository.domain.entity.SensorMessageEventBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
-internal class SensorMessagesProducerTest {
+internal class SensorMessageProcessorTest {
 
-    private val victim = SensorMessagesProcessor()
+    private val victim = SensorMessageProcessor()
 
     @Test
     fun `process correctly SensorMessageEvent`() {

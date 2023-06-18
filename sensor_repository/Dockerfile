@@ -1,7 +1,7 @@
 FROM gradle:7.6.1-jdk17-jammy AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+RUN gradle build --no-daemon -x test
 
 FROM amazoncorretto:17.0.7-al2023-headless
 RUN mkdir /app
