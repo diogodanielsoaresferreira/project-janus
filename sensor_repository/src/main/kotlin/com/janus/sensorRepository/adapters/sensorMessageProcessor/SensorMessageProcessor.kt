@@ -38,7 +38,7 @@ class SensorMessageProcessor(
     }
 
     private fun processSensorMessageEventStringValueType(event: SensorMessageEvent) {
-        logger.debug("operation=process, message='processing SensorMessageEvent {} as SensorStringMessage'", event)
+        logger.debug("operation=processSensorMessageEventStringValueType, message='processing SensorMessageEvent {} as SensorStringMessage'", event)
         useCase.execute(event.toSensorStringMessage())
     }
 
