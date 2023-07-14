@@ -38,7 +38,7 @@ internal class SensorMessageEventDeserializationTest(
             ),
 
             Arguments.of(
-                SensorMessageEventBuilder(valueType="numerical", value="2").build(),
+                SensorMessageEventBuilder(valueType="numerical", value="1.5").build(),
                 SensorMessageEventFileReader.readFile("numericalValue.json")),
         )
 

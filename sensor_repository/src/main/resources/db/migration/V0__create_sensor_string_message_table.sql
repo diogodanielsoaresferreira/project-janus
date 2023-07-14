@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS sensor_string_message (
 );
 
 SELECT create_hypertable('sensor_string_message','message_timestamp');
-CREATE INDEX sensor_id_timestamp ON sensor_string_message (sensor_id, message_timestamp ASC);
+CREATE INDEX sensor_string_message_sensor_id_timestamp ON sensor_string_message (sensor_id, message_timestamp ASC);

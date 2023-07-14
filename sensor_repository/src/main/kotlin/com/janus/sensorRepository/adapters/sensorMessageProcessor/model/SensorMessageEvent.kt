@@ -1,6 +1,7 @@
 package com.janus.sensorRepository.adapters.sensorMessageProcessor.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.janus.sensorRepository.domain.entity.SensorNumericalMessage
 import com.janus.sensorRepository.domain.entity.SensorStringMessage
 import java.time.OffsetDateTime
 
@@ -21,4 +22,10 @@ fun SensorMessageEvent.toSensorStringMessage(): SensorStringMessage = SensorStri
     sensorId=sensorId,
     timestamp=timestamp,
     value=value
+)
+
+fun SensorMessageEvent.toSensorNumericalMessage(): SensorNumericalMessage = SensorNumericalMessage(
+    sensorId=sensorId,
+    timestamp=timestamp,
+    value=value.toDouble()
 )
