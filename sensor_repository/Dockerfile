@@ -1,19 +1,9 @@
-FROM elixir:1.12.2-alpine
+FROM gradle:7.6.1-jdk17-jammy AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon -x test
 
-# Install hex package manager
-RUN mix local.hex --force
-
-# Create app directory
+FROM amazoncorretto:17.0.7-al2023-headless
 RUN mkdir /app
-WORKDIR /app
-
-# Copy mix file and download dependencies
-COPY mix.* ./
-RUN mix deps.get
-RUN mix local.rebar --force
-
-# Copy the Elixir projects into it
-COPY . .
-
-
-CMD ["/app/entrypoint.sh"]
+COPY --from=build /home/gradle/src/build/libs/sensor_repository-0.0.1-SNAPSHOT.jar /app/spring-boot-application.jar
+ENTRYPOINT ["java", "-jar", "/app/spring-boot-application.jar"]

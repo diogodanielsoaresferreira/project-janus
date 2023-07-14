@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   rabbitmq:
-    image: rabbitmq:3.9.1-management-alpine
+    image: rabbitmq:3.11.17-management-alpine # For now, more recent versions do not work in Mac M1
     volumes:
       - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
@@ -11,21 +11,24 @@ services:
       - 15672:15672
 
   db:
-    image: timescale/timescaledb:2.4.1-pg12
+    image: timescale/timescaledb:2.11.0-pg14
     ports:
       - 5432:5432/tcp
     environment:
-      POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: sensor_repository_repo
 
   sensor_repository:
     build:
       context: ./sensor_repository
     environment:
-      MIX_ENV: prod
-      RABBITMQ_HOST: rabbitmq
-      DB_HOST: db
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: sensor_repository
+      SPRING_RABBITMQ_PASSWORD: sensor_repository
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sensor_repository_repo
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
     depends_on:
-    - rabbitmq
-    - db
+      - rabbitmq
+      - db
