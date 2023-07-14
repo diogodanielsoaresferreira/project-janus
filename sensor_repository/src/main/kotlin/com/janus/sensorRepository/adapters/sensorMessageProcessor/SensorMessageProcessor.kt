@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.SensorMessageEvent
+import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorNumericalMessage
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorStringMessage
 import com.janus.sensorRepository.domain.port.EventProcessor
+import com.janus.sensorRepository.domain.port.SaveSensorNumericalMessageUseCase
 import com.janus.sensorRepository.domain.port.SaveSensorStringMessageUseCase
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,7 +21,8 @@ import java.lang.RuntimeException
 
 @Component
 class SensorMessageProcessor(
-    @Autowired private val useCase: SaveSensorStringMessageUseCase
+    @Autowired private val useCaseStringMessage: SaveSensorStringMessageUseCase,
+    @Autowired private val useCaseNumericalMessage: SaveSensorNumericalMessageUseCase
 ): EventProcessor<SensorMessageEvent> {
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
@@ -29,6 +32,7 @@ class SensorMessageProcessor(
         logger.debug("operation=process, message='received SensorMessageEvent {}'", event)
         when(event.valueType.lowercase().trim()) {
             "string" -> processSensorMessageEventStringValueType(event)
+            "numerical" -> processSensorMessageEventNumericalValueType(event)
             else -> {
                 logger.error("operation=process, message='error processing SensorMessageEvent $event', " +
                         "cause='unknown valueType ${event.valueType}'")
@@ -39,7 +43,12 @@ class SensorMessageProcessor(
 
     private fun processSensorMessageEventStringValueType(event: SensorMessageEvent) {
         logger.debug("operation=processSensorMessageEventStringValueType, message='processing SensorMessageEvent {} as SensorStringMessage'", event)
-        useCase.execute(event.toSensorStringMessage())
+        useCaseStringMessage.execute(event.toSensorStringMessage())
+    }
+
+    private fun processSensorMessageEventNumericalValueType(event: SensorMessageEvent) {
+        logger.debug("operation=processSensorMessageEventNumericalValueType, message='processing SensorMessageEvent {} as SensorNumericalMessage'", event)
+        useCaseNumericalMessage.execute(event.toSensorNumericalMessage())
     }
 
     @Bean
