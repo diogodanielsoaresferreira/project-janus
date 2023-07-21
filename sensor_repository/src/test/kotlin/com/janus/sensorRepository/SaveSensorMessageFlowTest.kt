@@ -2,8 +2,7 @@ package com.janus.sensorRepository
 
 import com.janus.sensorRepository.adapters.sensorMessageRepository.model.SensorStringMessageEntityBuilder
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.SensorMessageEventFileReader
-import com.janus.sensorRepository.adapters.sensorMessageRepository.SensorNumericalMessageRepositoryTestingUtils
-import com.janus.sensorRepository.adapters.sensorMessageRepository.SensorStringMessageRepositoryTestingUtils
+import com.janus.sensorRepository.adapters.sensorMessageRepository.SensorMessageRepositoryTestingUtils
 import com.janus.sensorRepository.adapters.sensorMessageRepository.model.SensorNumericalMessageEntityBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -26,20 +25,16 @@ class SaveSensorMessageFlowTest(
 	@Autowired private val jdbcTemplate: JdbcTemplate
 ) {
 
-	private val sensorStringRepoTestUtils: SensorStringMessageRepositoryTestingUtils =
-		SensorStringMessageRepositoryTestingUtils(jdbcTemplate)
-
-	private val sensorNumericalRepoTestUtils: SensorNumericalMessageRepositoryTestingUtils =
-		SensorNumericalMessageRepositoryTestingUtils(jdbcTemplate)
+	private val sensorRepoTestUtils = SensorMessageRepositoryTestingUtils(jdbcTemplate)
 
 	@Test
 	fun `event with valueType String is correctly stored in string repository`() {
 		val event = SensorMessageEventFileReader.readFile("default.json")
 		template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		await().atMost(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(1, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(SensorStringMessageEntityBuilder().build(), sensorStringRepoTestUtils.getElementInRepository())
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(1, sensorRepoTestUtils.getNumberOfStringMessages())
+			assertEquals(SensorStringMessageEntityBuilder().build(), sensorRepoTestUtils.getStringMessages()[0])
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 
@@ -49,11 +44,11 @@ class SaveSensorMessageFlowTest(
 		template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		await().atMost(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(2, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			val elementsInRepository = sensorStringRepoTestUtils.getElementsInRepository()
+			assertEquals(2, sensorRepoTestUtils.getNumberOfStringMessages())
+			val elementsInRepository = sensorRepoTestUtils.getStringMessages()
 			assertEquals(SensorStringMessageEntityBuilder().build(), elementsInRepository[0])
 			assertEquals(SensorStringMessageEntityBuilder(id=2).build(), elementsInRepository[1])
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 
@@ -62,9 +57,9 @@ class SaveSensorMessageFlowTest(
 		val event = SensorMessageEventFileReader.readFile("numericalValue.json")
 		template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		await().during(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(1, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(SensorNumericalMessageEntityBuilder().build(), sensorNumericalRepoTestUtils.getElementInRepository())
-			assertEquals(0, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(1, sensorRepoTestUtils.getNumberOfNumericalMessages())
+			assertEquals(SensorNumericalMessageEntityBuilder().build(), sensorRepoTestUtils.getNumericalMessages()[0])
+			assertEquals(0, sensorRepoTestUtils.getNumberOfStringMessages())
 		}
 	}
 
@@ -76,8 +71,8 @@ class SaveSensorMessageFlowTest(
 			template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		}
 		await().during(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(0, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfStringMessages())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 
@@ -88,8 +83,8 @@ class SaveSensorMessageFlowTest(
 			template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		}
 		await().during(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(0, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfStringMessages())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 
@@ -100,8 +95,8 @@ class SaveSensorMessageFlowTest(
 			template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		}
 		await().during(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(0, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfStringMessages())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 
@@ -112,8 +107,8 @@ class SaveSensorMessageFlowTest(
 			template.send("sensor_consumer_queue_name", Message(event.toByteArray()))
 		}
 		await().during(Duration.ofSeconds(1)).untilAsserted {
-			assertEquals(0, sensorStringRepoTestUtils.getNumberOfElementsInRepository())
-			assertEquals(0, sensorNumericalRepoTestUtils.getNumberOfElementsInRepository())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfStringMessages())
+			assertEquals(0, sensorRepoTestUtils.getNumberOfNumericalMessages())
 		}
 	}
 

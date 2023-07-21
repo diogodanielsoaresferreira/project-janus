@@ -7,8 +7,7 @@ import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.SensorMe
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorNumericalMessage
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorStringMessage
 import com.janus.sensorRepository.domain.port.EventProcessor
-import com.janus.sensorRepository.domain.port.SaveSensorNumericalMessageUseCase
-import com.janus.sensorRepository.domain.port.SaveSensorStringMessageUseCase
+import com.janus.sensorRepository.domain.port.SaveSensorMessageUseCase
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.rabbit.annotation.RabbitListener
@@ -21,8 +20,7 @@ import java.lang.RuntimeException
 
 @Component
 class SensorMessageProcessor(
-    @Autowired private val useCaseStringMessage: SaveSensorStringMessageUseCase,
-    @Autowired private val useCaseNumericalMessage: SaveSensorNumericalMessageUseCase
+    @Autowired private val saveSensorMessageUseCase: SaveSensorMessageUseCase
 ): EventProcessor<SensorMessageEvent> {
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
@@ -43,12 +41,12 @@ class SensorMessageProcessor(
 
     private fun processSensorMessageEventStringValueType(event: SensorMessageEvent) {
         logger.debug("operation=processSensorMessageEventStringValueType, message='processing SensorMessageEvent {} as SensorStringMessage'", event)
-        useCaseStringMessage.execute(event.toSensorStringMessage())
+        saveSensorMessageUseCase.execute(event.toSensorStringMessage())
     }
 
     private fun processSensorMessageEventNumericalValueType(event: SensorMessageEvent) {
         logger.debug("operation=processSensorMessageEventNumericalValueType, message='processing SensorMessageEvent {} as SensorNumericalMessage'", event)
-        useCaseNumericalMessage.execute(event.toSensorNumericalMessage())
+        saveSensorMessageUseCase.execute(event.toSensorNumericalMessage())
     }
 
     @Bean
