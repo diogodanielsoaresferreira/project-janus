@@ -1,7 +1,12 @@
 package com.janus.sensorRepository.adapters.sensorMessageRepository
 
+import com.janus.sensorRepository.adapters.sensorMessageRepository.mapper.SensorNumericalMessageEntityRowMapper
+import com.janus.sensorRepository.adapters.sensorMessageRepository.mapper.SensorStringMessageEntityRowMapper
+import com.janus.sensorRepository.adapters.sensorMessageRepository.model.toSensorNumericalMessage
+import com.janus.sensorRepository.adapters.sensorMessageRepository.model.toSensorStringMessage
 import com.janus.sensorRepository.domain.entity.SensorNumericalMessage
 import com.janus.sensorRepository.domain.entity.SensorStringMessage
+import com.janus.sensorRepository.domain.entity.SortOrder
 import com.janus.sensorRepository.domain.port.SensorMessageRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -9,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.lang.RuntimeException
+import java.time.OffsetDateTime
 
 @Repository
 class SensorMessageRepositoryImpl(
@@ -43,6 +49,38 @@ class SensorMessageRepositoryImpl(
             throw SensorMessageSaveError("save SensorStringMessage $entity affected $rowsAffected rows")
         }
         logger.debug("operation=save, message='SensorStringMessage {} successfully saved'", entity)
+    }
+
+    override fun getSensorStringMessages(
+        sensorName: String,
+        from: OffsetDateTime,
+        to: OffsetDateTime,
+        sort: SortOrder
+    ): List<SensorStringMessage> {
+        val query = """
+            SELECT * FROM sensor_string_message
+            WHERE sensor_id = '$sensorName'
+            AND message_timestamp between '$from' and '$to'
+            ORDER BY message_timestamp ${sort.value}, id
+        """.trimIndent()
+        val results =  jdbcTemplate.query(query, SensorStringMessageEntityRowMapper())
+        return results.map { it.toSensorStringMessage() }
+    }
+
+    override fun getSensorNumericalMessages(
+        sensorName: String,
+        from: OffsetDateTime,
+        to: OffsetDateTime,
+        sort: SortOrder
+    ): List<SensorNumericalMessage> {
+        val query = """
+            SELECT * FROM sensor_numerical_message
+            WHERE sensor_id = '$sensorName'
+            AND message_timestamp between '$from' and '$to'
+            ORDER BY message_timestamp ${sort.value}, id
+        """.trimIndent()
+        val results =  jdbcTemplate.query(query, SensorNumericalMessageEntityRowMapper())
+        return results.map { it.toSensorNumericalMessage() }
     }
 
 }
