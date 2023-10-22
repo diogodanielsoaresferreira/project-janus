@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.SensorMessageEvent
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorNumericalMessage
 import com.janus.sensorRepository.adapters.sensorMessageProcessor.model.toSensorStringMessage
+import com.janus.sensorRepository.domain.entity.ValueType
 import com.janus.sensorRepository.domain.port.EventProcessor
 import com.janus.sensorRepository.domain.port.SaveSensorMessageUseCase
 import org.slf4j.Logger
@@ -29,8 +30,8 @@ class SensorMessageProcessor(
     override fun process(event: SensorMessageEvent) {
         logger.debug("operation=process, message='received SensorMessageEvent {}'", event)
         when(event.valueType.lowercase().trim()) {
-            "string" -> processSensorMessageEventStringValueType(event)
-            "numerical" -> processSensorMessageEventNumericalValueType(event)
+            ValueType.STRING.name.lowercase() -> processSensorMessageEventStringValueType(event)
+            ValueType.NUMERICAL.name.lowercase() -> processSensorMessageEventNumericalValueType(event)
             else -> {
                 logger.error("operation=process, message='error processing SensorMessageEvent $event', " +
                         "cause='unknown valueType ${event.valueType}'")
