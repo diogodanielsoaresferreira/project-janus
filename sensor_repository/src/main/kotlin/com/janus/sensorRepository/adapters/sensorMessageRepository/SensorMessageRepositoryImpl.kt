@@ -57,6 +57,13 @@ class SensorMessageRepositoryImpl(
         to: OffsetDateTime,
         sort: SortOrder
     ): List<SensorStringMessage> {
+        logger.debug(
+            "operation=getSensorStringMessages, message='fetching sensor {} string messages from {} to {} in {} order'",
+            sensorName,
+            from,
+            to,
+            sort
+        )
         val query = """
             SELECT * FROM sensor_string_message
             WHERE sensor_id = '$sensorName'
@@ -73,6 +80,13 @@ class SensorMessageRepositoryImpl(
         to: OffsetDateTime,
         sort: SortOrder
     ): List<SensorNumericalMessage> {
+        logger.debug(
+            "operation=getSensorNumericalMessages, message='fetching sensor {} numerical messages from {} to {} in {} order'",
+            sensorName,
+            from,
+            to,
+            sort
+        )
         val query = """
             SELECT * FROM sensor_numerical_message
             WHERE sensor_id = '$sensorName'
