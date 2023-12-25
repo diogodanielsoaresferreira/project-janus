@@ -16,19 +16,19 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-amqp:3.0.4")
-	implementation("org.springframework.boot:spring-boot-starter-data-jdbc:3.0.4")
-	implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
-	implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
-	implementation("org.flywaydb:flyway-core:9.16.0")
-	implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
-	runtimeOnly("org.postgresql:postgresql:42.5.4")
-	testImplementation("org.springframework.boot:spring-boot-starter-test:3.1.0")
-	testImplementation("org.springframework.amqp:spring-rabbit-test:3.0.2")
-	testImplementation("org.springframework.boot:spring-boot-testcontainers:3.2.1")
-	testImplementation("org.testcontainers:junit-jupiter:1.17.6")
-	testImplementation("org.testcontainers:postgresql:1.17.6")
+	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.flywaydb:flyway-core")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.amqp:spring-rabbit-test")
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
 }
 
 tasks.withType<KotlinCompile> {
