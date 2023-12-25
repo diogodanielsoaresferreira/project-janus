@@ -28,7 +28,7 @@ class GetSensorValuesUseCaseImpl(
             to,
             sort
         )
-        val unsortedValues = ValueType.values().flatMap {
+        val unsortedValues = ValueType.entries.flatMap {
             getSensorValues(sensorId, from, to, sort, it)
         }
 
@@ -67,4 +67,4 @@ class GetSensorValuesUseCaseImpl(
         }
 }
 
-fun LocalDateTime.toSystemOffsetDateTime(): OffsetDateTime = this.atZone(ZoneId.systemDefault()).toOffsetDateTime()
+fun LocalDateTime.toSystemOffsetDateTime(): OffsetDateTime = this.atZone(ZoneId.of("Europe/London")).toOffsetDateTime()
