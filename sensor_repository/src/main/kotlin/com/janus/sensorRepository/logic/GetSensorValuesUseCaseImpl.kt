@@ -67,4 +67,4 @@ class GetSensorValuesUseCaseImpl(
         }
 }
 
-fun LocalDateTime.toSystemOffsetDateTime(): OffsetDateTime = this.atZone(ZoneId.systemDefault()).toOffsetDateTime()
+fun LocalDateTime.toSystemOffsetDateTime(): OffsetDateTime = this.atZone(ZoneId.of("Europe/London")).toOffsetDateTime()
