@@ -25,10 +25,10 @@ jobs:
           sensor_repository/**/gradle-wrapper.properties
 
     - name: Change directory to Sensor Repository Project
-      run: |
-        ls
-        cd sensor_repository
-        ls
+      run: cd sensor_repository
+
+    - name: Grant Permissions to gradlew
+      run: chmod +x gradlew
 
     - name: Run tests with Gradle
       run: ./gradlew build --no-daemon
