@@ -28,6 +28,7 @@ jobs:
       run: |
         ls
         cd sensor_repository
+        ls
 
     - name: Run tests with Gradle
       run: ./gradlew build --no-daemon
