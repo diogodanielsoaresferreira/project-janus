@@ -6,6 +6,12 @@ import com.janus.sensorRepository.adapters.sensorValuesController.model.GetSenso
 import com.janus.sensorRepository.domain.entity.SortOrder
 import com.janus.sensorRepository.domain.entity.ValueType
 import com.janus.sensorRepository.domain.port.GetSensorValuesUseCase
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
@@ -18,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
+@Tag(name = "Sensor Values", description = "Sensor Values APIs")
 @RestController
 class SensorValuesController(
     @Autowired private val useCase: GetSensorValuesUseCase
@@ -27,6 +34,19 @@ class SensorValuesController(
     private val ninetyDaysMillis = 7776000000
 
     @GetMapping("/{sensorId}/values")
+    @Operation(summary = "Get sensor values")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Sensor values",
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = GetSensorValuesResponse::class))]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content(mediaType = "application/json")]),
+            ApiResponse(responseCode = "404", description = "Sensor not found", content = [Content(mediaType = "application/json")]),
+            ApiResponse(responseCode = "500", description = "Internal Server Error", content = [Content(mediaType = "application/json")])
+        ]
+    )
     fun getValues(
         @PathVariable
         sensorId: String,
