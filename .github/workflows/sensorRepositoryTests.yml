@@ -1,0 +1,28 @@
+name: SensorRepository run tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    name: Run Gradle Tests
+    steps:
+    
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+        cache: 'gradle'
+        cache-dependency-path: |
+          sensor_repository/*.gradle*
+          sensor_repository/**/gradle-wrapper.properties
+
+    - name: Run tests with Gradle
+      run: cd sensor_repository && ./gradlew build --no-daemon
